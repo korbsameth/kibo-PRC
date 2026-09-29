@@ -1,24 +1,22 @@
-"""
-code/marker_reader.py
-Function សម្រាប់ស្កេន និងអាន AR Marker (AR Marker Detection & Reading)
-"""
+import math 
+import numpy as np
+try:
+    import cv2
+    import cv2.aruco as aruco
+    HAS_OPENCV = True
+    expecpt ImportEror:
+    HAS_OPEN = False
 
-from typing import Optional, Dict, Any
+DEFAULT_CAM_MATRIX = np.array([  
+    [525.0,   0.0, 320.0],        # Default Int-Ball2 navigation camera parameters
+    [  0.0, 525.0, 240.0],
+    [  0.0,   0.0,   1.0]
+], dtype=np.float64)
 
-def init_camera(camera_index: int = 0):
-    """បើក Camera សម្រាប់ស្កេន Marker"""
-    print(f"[MarkerReader] Initializing camera {camera_index}...")
-    return True
+DEFAULT_DIST_COEFFS = np.zeros((5, 1), dtype=np.float64)
+DEFAULT_MARKER_SIZE = 0.05  # 5 cm
 
-def read_ar_marker() -> Optional[Dict[str, Any]]:
-    """
-    អាន AR Marker ពី Camera
-    Returns dict containing marker ID and position/distance info, or None
-    """
-    # ឧទាហរណ៍ទម្រង់ទិន្នន័យ (Sample return data)
-    print("[MarkerReader] Scanning for AR Markers...")
-    return {
-        "marker_id": 1,
-        "distance": 0.5,  # ម៉ែត្រ (meters)
-        "angle": 0.0      # ដឺក្រេ (degrees)
-    }
+class ARMarkerDetector:
+    def __init__(self, marker_size=DEFAULT_MARKER_SIZE, dictionary_type=None):
+        self.marker_size = marker_size
+        self.camera_matrix = DEFAULT_CAM_MATRIX
