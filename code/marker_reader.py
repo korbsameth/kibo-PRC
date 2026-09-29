@@ -1,6 +1,5 @@
 import math
 import numpy as np
-
 try:
     import cv2
     import cv2.aruco as aruco
@@ -17,7 +16,6 @@ DEFAULT_CAM_MATRIX = np.array([
 
 DEFAULT_DIST_COEFFS = np.zeros((5, 1), dtype=np.float64)
 DEFAULT_MARKER_SIZE = 0.05  # 5 cm
-
 
 class ARMarkerDetector:
     def __init__(self, marker_size=DEFAULT_MARKER_SIZE, dictionary_type=None):
