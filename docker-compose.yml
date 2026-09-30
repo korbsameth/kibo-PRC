@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  # Main autonomous mission service
+  kibo-mission:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kibo_prc_mission
+    volumes:
+      - ./code:/app/code
+    command: python code/main.py
+
+  # Automated test runner service
+  kibo-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kibo_prc_test
+    volumes:
+      - ./code:/app/code
+      - ./tests:/app/tests
+    command: python -m unittest discover -s tests -p "test_*.py"

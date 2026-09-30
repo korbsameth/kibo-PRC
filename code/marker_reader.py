@@ -133,9 +133,12 @@ class ARMarkerDetector:
     def calculate_alignment_offsets(self, detected_marker, target_distance=0.50):
         """
         Calculate error vector for Int-Ball2 attitude control to align directly with marker center.
-        Used by Lyinh (Main Programmer) for attitude correction.
+        Used by Ly Ly Inh & Korb Sameth for attitude correction.
         """
-        if not detected_marker:
+        if not detected_marker or not isinstance(detected_marker, dict):
+            return None
+
+        if "center_pixel" not in detected_marker or "distance_m" not in detected_marker:
             return None
 
         cx, cy = detected_marker["center_pixel"]
@@ -151,7 +154,7 @@ class ARMarkerDetector:
                       abs(dist_err) < 0.03)
 
         return {
-            "marker_id": detected_marker["id"],
+            "marker_id": detected_marker.get("id", detected_marker.get("marker_id", 0)),
             "pixel_error_x": round(pixel_err_x, 2),
             "pixel_error_y": round(pixel_err_y, 2),
             "distance_error_m": round(dist_err, 3),
