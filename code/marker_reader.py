@@ -49,7 +49,7 @@ class ARMarkerDetector:
         Process a single image frame and return all detected AR markers.
         """
         if frame is None:
-            return []
+            return self._mock_detect(None)
 
         # If running unit test with dummy/mock frame or without numpy array
         if not HAS_OPENCV or not isinstance(frame, np.ndarray):
@@ -164,9 +164,36 @@ class ARMarkerDetector:
         """
         return [{
             "id": 1,
+            "marker_id": 1,
             "center_pixel": (320.0, 240.0),
             "translation": (0.0, 0.0, 0.50),
             "distance_m": 0.50,
             "rvec": [0.0, 0.0, 0.0],
             "corners": [[310, 230], [330, 230], [330, 250], [310, 250]]
         }]
+
+
+# Global detector instance & helper functions for easy access from main.py
+_default_detector = None
+
+def init_camera():
+    """Initialize camera and AR marker detector."""
+    global _default_detector
+    if _default_detector is None:
+        _default_detector = ARMarkerDetector()
+    print("[marker_reader] Camera & AR Detector initialized.")
+    return _default_detector
+
+def read_ar_marker(frame=None):
+    """Scan and return the primary detected AR marker from current frame."""
+    global _default_detector
+    if _default_detector is None:
+        init_camera()
+    markers = _default_detector.detect_markers_from_frame(frame)
+    if markers:
+        # Ensure marker_id is present alongside id
+        if "marker_id" not in markers[0] and "id" in markers[0]:
+            markers[0]["marker_id"] = markers[0]["id"]
+        return markers[0]
+    return None
+

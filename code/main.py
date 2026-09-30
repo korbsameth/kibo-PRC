@@ -9,7 +9,7 @@ from marker_reader import init_camera, read_ar_marker
 from route_planner import RoutePlanner
 
 def main():
-    print("=== [ibo-RPC-Team] Starting Robot Control System ===")
+    print("=== [Kibo-RPC-Team] Starting Robot Control System ===")
     
     # 1. Initialize sensors / Camera
     init_camera()
